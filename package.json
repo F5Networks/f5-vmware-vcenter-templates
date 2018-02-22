@@ -1,0 +1,14 @@
+{
+  "name": "f5-vmware-templates",
+  "version": "1.0.0",
+  "description": "Common library code for deploying a BIG-IP in vmware vCenter environment",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/F5Networks/f5-vmware-vcenter-templates.git"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "unirest": "^0.4.2"
+  }
+}

@@ -15,7 +15,8 @@ Descriptions for each template, including how the templates are generated and as
 ## Current F5 VMware templates
 The following is a list of the current F5 VMware templates. Click the link to view the README file which includes information on how to deploy the template.
 <br>
-   - [**Standalone BIG-IP VE - 3 NIC: Experimental**](https://github.com/F5Networks/f5-vmware-vcenter-templates/tree/master/experimental/standalone/3nic/existing_stack/BYOL)
+   - [**Standalone BIG-IP VE -  nNIC: Experimental**](https://github.com/F5Networks/f5-vmware-vcenter-templates/tree/master/experimental/standalone/nNic/existing_stack)
+   - [**HA failover BIG-IP VE -  4NIC: Experimental**](https://github.com/F5Networks/f5-vmware-vcenter-templates/tree/master/experimental/failover/4nic/existing_stack)
 
 <br>
 ---

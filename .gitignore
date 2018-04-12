@@ -1,3 +1,8 @@
 # Ignore Node Modules
 /node_modules
 package-lock.json
+# Ignore lab settings file
+/experimental/standalone/nNic/existing_stack/lab_settings*.js
+/experimental/failover/4nic/existing_stack/lab_settings*.js
+# Ignore ignore file
+.gitignore

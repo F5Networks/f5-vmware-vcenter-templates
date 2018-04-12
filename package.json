@@ -9,6 +9,12 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "unirest": "^0.4.2"
+    "crypto": "^1.0.1",
+    "package.json": "^2.0.1",
+    "q": "^1.5.1",
+    "sha512crypt-node": "^0.1.0",
+    "ssh2shell": "^1.9.0",
+    "unirest": "^0.5.1",
+    "winston": "^2.4.1"
   }
 }

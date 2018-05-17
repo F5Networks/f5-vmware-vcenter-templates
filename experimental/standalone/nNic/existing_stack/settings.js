@@ -1,4 +1,4 @@
- // Version v1.1.0
+ // Version v1.2.0
  // This file contains required configuration parameters used in f5 standalone template. Note most parameters are case sensitive.
 
  module.exports = {
@@ -27,13 +27,15 @@
   ntp: '<ntp server url>', // URL to use for NTP
   timezone: '<UTC>', // specify time zone, ie US/Pacific
   dnsAddresses: '<DNS list', // list of server IP addresses to use for DNS
-  cloudlibUrl: 'https://raw.githubusercontent.com/F5Networks/f5-cloud-libs/v3.6.0/dist/f5-cloud-libs.tar.gz', // list url used to download cloud-libs node library.
+  cloudlibUrl: 'https://raw.githubusercontent.com/F5Networks/f5-cloud-libs/v4.1.1/dist/f5-cloud-libs.tar.gz', // list url used to download cloud-libs node library.
                 // The default is listed as public github repository, specify alternate url if public internet from big-ip management network is not available.
                 // **Note cloud-lib version is specific to this template release and requires the cloud-lib release specified in default url be used (v3.6.0).
   
   // BIG-IP licensing using BIG-IQ
-  bigiqAddress: '<BIG-IQ Management ip address>',   // optional - list BIG-IQ management address or FQDN to use for licensing BIG-IP's. ** Leave blank if using license keys!
-  bigiqLicensePoolName: '<BIG-IQ licensing pool>', // Name of BIG-IQ license pool
+  bigIqAddress: '<BIG-IQ Management ip address>',   // optional - list BIG-IQ management address or FQDN to use for licensing BIG-IP's. ** Leave blank if using license keys!
+  bigIqLicensePoolName: '<BIG-IQ licensing pool>', // Name of BIG-IQ license pool
+  bigIqLicenseSkuKeyword1:  '<SKU>', // optional - BIG-IQ offers Enterprise license aggreement pool types which require SKU name determine which license type to apply to BIG-IP. 
+  bigIqLicenseUnitOfMeasure: '<license duration>', // optional - Enter license duration: yearly, monthly, daily, hourly.
   
   // BIG-IP licensing using license key
   lickey1: '',  // If not using BIG-IQ to license BIG-IP's, list first BIG-IP License key (vmName). Leave blank if using BIG-IQ!

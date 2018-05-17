@@ -1,6 +1,6 @@
 {
   "name": "f5-vmware-templates",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Common library code for deploying a BIG-IP in vmware vCenter environment",
   "main": "index.js",
   "repository": {

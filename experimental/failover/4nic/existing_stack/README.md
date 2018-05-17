@@ -32,7 +32,7 @@ The following are prerequisites and configuration notes for the F5 nNIC VMware t
     - Port 22 for SSH access to the BIG-IP VE.
     - Port 443 (or other port, use 8443 when using 1 NIC) for accessing the BIG-IP web-based Configuration utility.  
     - A port for accessing your applications via defined BIG-IP virtual servers.  
-  - If you choose to use a BIG-IQ device in order to license BIG-IP VEs, note this solution only supports BIG-IQ versions 5.0 - 5.3, your BIG-IQ system must have at least 2 NICs, and you must have an existing license pool with BIG-IP VE BYOL licenses.
+  - If you choose to use a BIG-IQ device in order to license BIG-IP VEs, note this solution supports the two most recent versions of BIG-IQ, your BIG-IQ system must have at least 2 NICs, and you must have an existing license pool with BIG-IP VE BYOL licenses. **Note:** The templates now support BIG-IQ licensing using an [ELA](https://www.f5.com/pdf/licensing/big-ip-virtual-edition-enterprise-licensing-agreement-overview.pdf)/[CLPv2]( https://f5.com/partners/cloud-provider) pool, which enables self-licensing of BIG-IP virtual editions (VEs).
 
 
 
@@ -148,7 +148,7 @@ The following contains an example of the client setup using Ubuntu, however it s
 #### Example script
 
 ``` javascript
-// Version v1.1.0
+ // Version v1.2.0
  // This file contains required configuration parameters used in f5 failover templates. Note most parameters are case sensitive.
 
 module.exports = {
@@ -176,14 +176,16 @@ module.exports = {
   vmFqdn: '<fqdn>', // BIG-IP VE FQDN
   ntp: '<ntp server url>', // URL to use for NTP
   timezone: '<UTC>', // specify time zone, ie US/Pacific
-  dnsAddresses: '<DNS list>', // list of server IP addresses separated by a space to use for DNS
+  dnsAddresses: '<DNS list>', // list of server IP addresses to use for DNS
   cloudlibUrl: 'https://raw.githubusercontent.com/F5Networks/f5-cloud-libs/v3.6.0/dist/f5-cloud-libs.tar.gz', // list url used to download cloud-libs node library.
                 // The default is listed as public github repository, specify alternate url if public internet from big-ip management network is not available.
                 // **Note cloud-lib version is specific to this template release and requires the cloud-lib release specified in default url be used (v3.6.0).
   
   // BIG-IP licensing using BIG-IQ
-  bigiqAddress: '<BIG-IQ Management ip address>',   // optional - list BIG-IQ management address or FQDN to use for licensing BIG-IP's. ** Leave blank if using license keys!
-  bigiqLicensePoolName: '<BIG-IQ licensing pool>', // Name of BIG-IQ license pool
+  bigIqAddress: '<BIG-IQ Management ip address>',   // optional - list BIG-IQ management address or FQDN to use for licensing BIG-IP's. ** Leave blank if using license keys!
+  bigIqLicensePoolName: '<BIG-IQ licensing pool>', // Name of BIG-IQ license pool
+  bigIqLicenseSkuKeyword1:  '<SKU>', // optional - BIG-IQ offers Enterprise license aggreement pool types which require SKU name determine which license type to apply to BIG-IP. 
+  bigIqLicenseUnitOfMeasure: '<license duration>', // optional - Enter license duration: yearly, monthly, daily, hourly.
   
   // BIG-IP licensing using license key
   lickey1: '',  // If not using BIG-IQ to license BIG-IP's, list first BIG-IP License key (vmName). Leave blank if using BIG-IQ!
@@ -220,6 +222,7 @@ module.exports = {
   haVlan: '<ha vlan>', // optional - tagged VLAN for ha subnet. **Leave blank if vlan is untagged.
   stateMirroring: true, // enable state mirroring - true or false
 }
+
 
 ```
 

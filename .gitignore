@@ -4,5 +4,7 @@ package-lock.json
 # Ignore lab settings file
 /experimental/standalone/nNic/existing_stack/lab_settings*.js
 /experimental/failover/4nic/existing_stack/lab_settings*.js
+# Ignore build scripts
+package.sh
 # Ignore ignore file
 .gitignore

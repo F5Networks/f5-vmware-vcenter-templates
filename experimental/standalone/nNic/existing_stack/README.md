@@ -32,7 +32,7 @@ The following are prerequisites and configuration notes for the F5 nNIC VMware t
     - Port 22 for SSH access to the BIG-IP VE.
     - Port 443 (or other port, use 8443 when using 1 NIC) for accessing the BIG-IP web-based Configuration utility.  
     - A port for accessing your applications via defined BIG-IP virtual servers.  
-  - If you choose to use a BIG-IQ device in order to license BIG-IP VEs, note this solution only supports BIG-IQ versions 5.0 - 5.3, your BIG-IQ system must have at least 2 NICs, and you must have an existing license pool with BIG-IP VE BYOL licenses.
+  - If you choose to use a BIG-IQ device in order to license BIG-IP VEs, note this solution supports the two most recent versions of BIG-IQ, your BIG-IQ system must have at least 2 NICs, and you must have an existing license pool with BIG-IP VE BYOL licenses.  **Note:** The templates now support BIG-IQ licensing using an [ELA](https://www.f5.com/pdf/licensing/big-ip-virtual-edition-enterprise-licensing-agreement-overview.pdf)/[CLPv2]( https://f5.com/partners/cloud-provider) pool, which enables self-licensing of BIG-IP virtual editions (VEs).
 
 
 
@@ -148,8 +148,8 @@ The following contains an example of the client setup using Ubuntu, however it s
 #### Example script
 
 ``` javascript
-// Version v1.1.0
- // This file contains required configuration parameters used in f5 standalone templates. Note most parameters are case sensitive.
+// Version v1.2.0
+ // This file contains required configuration parameters used in f5 standalone template. Note most parameters are case sensitive.
 
  module.exports = {
   //vCenter parameters
@@ -177,37 +177,39 @@ The following contains an example of the client setup using Ubuntu, however it s
   ntp: '<ntp server url>', // URL to use for NTP
   timezone: '<UTC>', // specify time zone, ie US/Pacific
   dnsAddresses: '<DNS list', // list of server IP addresses to use for DNS
-  cloudlibUrl: 'https://raw.githubusercontent.com/F5Networks/f5-cloud-libs/v3.6.0/dist/f5-cloud-libs.tar.gz', // list url used to download cloud-libs node library.
+  cloudlibUrl: 'https://raw.githubusercontent.com/F5Networks/f5-cloud-libs/v4.0.3/dist/f5-cloud-libs.tar.gz', // list url used to download cloud-libs node library.
                 // The default is listed as public github repository, specify alternate url if public internet from big-ip management network is not available.
                 // **Note cloud-lib version is specific to this template release and requires the cloud-lib release specified in default url be used (v3.6.0).
   
   // BIG-IP licensing using BIG-IQ
-  bigiqAddress: '<BIG-IQ Management ip address>',   // optional - list BIG-IQ management address or FQDN to use for licensing BIG-IP's. ** Leave blank if using license keys!
-  bigiqLicensePoolName: '<BIG-IQ licensing pool>', // Name of BIG-IQ license pool
+  bigIqAddress: '<BIG-IQ Management ip address>',   // optional - list BIG-IQ management address or FQDN to use for licensing BIG-IP's. ** Leave blank if using license keys!
+  bigIqLicensePoolName: '<BIG-IQ licensing pool>', // Name of BIG-IQ license pool
+  bigIqLicenseSkuKeyword1:  '<SKU>', // optional - BIG-IQ offers Enterprise license aggreement pool types which require SKU name determine which license type to apply to BIG-IP. 
+  bigIqLicenseUnitOfMeasure: '<license duration>', // optional - Enter license duration: yearly, monthly, daily, hourly.
   
   // BIG-IP licensing using license key
-  lickey1: '',  // If not using BIG-IQ to license BIG-IP's, list BIG-IP License key (vmName). Leave blank if using BIG-IQ!
+  lickey1: '',  // If not using BIG-IQ to license BIG-IP's, list first BIG-IP License key (vmName). Leave blank if using BIG-IQ!
                 // **Note this option uses auto registration which requires BIG-IP management network allow access to F5 public registration server.
   
   numberNics: '4', // Indicate number of desired network interfaces (currently supports up to 4).
   // Management network settings (1st nic)
-  mgmtIpAddress: '<mgmt ip address>', // IP address used to manage BIG-IP (vmName)
+  mgmtIpAddress: '<1st mgmt ip address>', // IP address used to manage first BIG-IP (vmName)
   mgmtPrefix: '<mgmt prefix>', // mgmt subnet prefix
   mgmtGwAddress: '<mgmt gw address>', // management gw address
   
   // Public or external settings (2nd nic)
-  extIpAddress: '<1st ext ip address>', // BIG-IP self IP (non-floating) used on external network (vmName)
+  extIpAddress: '<1st ext ip address>', // First BIG-IP self IP (non-floating) used on external network (vmName)
   extPrefix: '<ext prefix>', // external subnet prefix
   extGw: '<ext gw>', // default gateway for tmm traffic
   extVlan: '<ext vlan>', // optional - tagged VLAN for external subnet. **Leave blank if vlan is untagged. 
   
   // Internal or private settings (3rd nic)
-  intIpAddress: '<1st int ip address>', // BIG-IP self IP (non-floating) used on internal network (vmName)
+  intIpAddress: '<1st int ip address>', // First BIG-IP self IP (non-floating) used on internal network (vmName)
   intPrefix: '<int prefix>', // prefix for internal subnet
   intVlan: '<int vlan>', // optional - tagged VLAN for internal subnet. **Leave blank if vlan is untagged.
   
   // HA settings (4th nic)
-  haIpAddress: '<1st ha ip address>', // BIG-IP self IP (non-floating) used on ha network (vmName)
+  haIpAddress: '<1st ha ip address>', // First BIG-IP self IP (non-floating) used on ha network (vmName)
   haPrefix: '<ha previx>', // prefix for HA subnet
   haVlan: '<ha vlan>', // optional - tagged VLAN for HA subnet. **Leave blank if vlan is untagged.
 }

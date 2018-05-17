@@ -1,4 +1,4 @@
-//    Version v1.1.0
+//    Version v1.2.0
 //    Deploys single BIG-IP with 1-4 configured network interfaces.
 //    Example Required values located in ./settings.js
 //    Load script in directory were script is located using notation "node f5-existing-stack-nNic-big-ip.js filename". Were filename contains configuration parameters using the format noted in ./settings.js.
@@ -30,8 +30,8 @@ var vcenterUsername = process.argv[3];
 var vcenterPwd = process.argv[4];
 var bigipRootPwd = process.argv[5];
 var bigipAdminPwd = process.argv[6];
-var bigiqUsername = process.argv[7];
-var bigiqPwd = process.argv[8];
+var bigIqUsername = process.argv[7];
+var bigIqPassword = process.argv[8];
 function standalone() {
     if (loggerOptions.console == false) {
         console.log('Console logs disabled, logs are written to ./' + loggerOptions.fileName);
@@ -58,10 +58,10 @@ function standalone() {
         })    
     })
     .then(function() {
-        if (settings.bigiqAddress) {
+        if (settings.bigIqAddress) {
             logger.info('\nBig-IQ Address present, collecting Big-IQ credentials....');
-            return input.inputCreds(false, 'Enter Big-IQ admin username:', 'Big-IQ admin account required! Remove Big-IQ address from settings file if you wish to use registration key for licensing.', bigiqUsername).then(resp => {
-                bigiqUsername = resp;
+            return input.inputCreds(false, 'Enter Big-IQ admin username:', 'Big-IQ admin account required! Remove Big-IQ address from settings file if you wish to use registration key for licensing.', bigIqUsername).then(resp => {
+                bigIqUsername = resp;
             })
         } else {
             logger.info('\nUsing registration key for licensing. Auto registration requires Big-IP has internet access to f5 registration server.....');
@@ -71,9 +71,9 @@ function standalone() {
         }   
     })
     .then(function() {
-        if (settings.bigiqAddress) {
-            return input.inputCreds(true, 'Enter Big-IQ password:', 'Big-IQ password required!', bigiqPwd).then(resp => {
-                bigiqPwd = resp;
+        if (settings.bigIqAddress) {
+            return input.inputCreds(true, 'Enter Big-IQ password:', 'Big-IQ password required!', bigIqPassword).then(resp => {
+                bigIqPassword = resp;
             })
         } else {
         }   
@@ -327,8 +327,10 @@ function standalone() {
         } else {
             var onboardJs = onboardJs.replace(/<MGMTPORT>/g, '')
         }
-        if (settings.bigiqAddress){
-            var onboardJs = onboardJs.replace(/<LICENSE>/g, " --license-pool --big-iq-host " + settings.bigiqAddress + " --big-iq-user " + bigiqUsername + " --big-iq-password " + bigiqPwd + " --license-pool-name " + settings.bigiqLicensePoolName + " --big-ip-mgmt-address " + settings.mgmtIpAddress);
+        if (settings.bigIqAddress && settings.bigIqLicenseSkuKeyword1 && settings.bigIqLicenseUnitOfMeasure){
+            var onboardJs = onboardJs.replace(/<LICENSE>/g, " --license-pool --cloud vmware --big-iq-host " + settings.bigIqAddress + " --big-iq-user " + bigIqUsername + " --big-iq-password " + bigIqPassword + " --license-pool-name " + settings.bigIqLicensePoolName + " --sku-keyword-1 " + settings.bigIqLicenseSkuKeyword1 + " --unit-of-measure " + settings.bigIqLicenseUnitOfMeasure + " --big-ip-mgmt-address " + settings.mgmtIpAddress);
+        } else if (settings.bigIqAddress){
+            var onboardJs = onboardJs.replace(/<LICENSE>/g, " --license-pool --cloud vmware --big-iq-host " + settings.bigIqAddress + " --big-iq-user " + bigIqUsername + " --big-iq-password " + bigIqPassword + " --license-pool-name " + settings.bigIqLicensePoolName + " --big-ip-mgmt-address " + settings.mgmtIpAddress);
         } else {
             var onboardJs = onboardJs.replace(/<LICENSE>/g, " --license " + settings.lickey1);
         }

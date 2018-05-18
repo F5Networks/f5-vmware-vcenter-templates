@@ -32,7 +32,7 @@ The following are prerequisites and configuration notes for the F5 nNIC VMware t
     - Port 22 for SSH access to the BIG-IP VE.
     - Port 443 (or other port, use 8443 when using 1 NIC) for accessing the BIG-IP web-based Configuration utility.  
     - A port for accessing your applications via defined BIG-IP virtual servers.  
-  - If you choose to use a BIG-IQ device in order to license BIG-IP VEs, note this solution supports the two most recent versions of BIG-IQ, your BIG-IQ system must have at least 2 NICs, and you must have an existing license pool with BIG-IP VE BYOL licenses. **Note:** The templates now support BIG-IQ licensing using an [ELA](https://www.f5.com/pdf/licensing/big-ip-virtual-edition-enterprise-licensing-agreement-overview.pdf)/[CLPv2]( https://f5.com/partners/cloud-provider) pool, which enables self-licensing of BIG-IP virtual editions (VEs).
+  - If you choose to use a BIG-IQ device in order to license BIG-IP VEs, note this solution supports the two most recent versions of BIG-IQ, your BIG-IQ system must have at least 2 NICs, and you must have an existing license pool with BIG-IP VE BYOL licenses. **Note:** The templates now support BIG-IQ licensing using an [ELA](https://www.f5.com/pdf/licensing/big-ip-virtual-edition-enterprise-licensing-agreement-overview.pdf)/subscription pool, which enables self-licensing of BIG-IP virtual editions (VEs).
 
 
 

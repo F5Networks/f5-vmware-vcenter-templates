@@ -1,20 +1,20 @@
 //  Version v1.2.0
 //  Deploys HA pair (Active/Standby) of BIG-IP's each with 4 configured network interfaces: Management, External, Internal, and HA
 //  Example Required values located in ./settings.js
-//  Load script in directory were script is located using notation "node f5-existing-stack-ha-cluster-4nic-big-ip.js filename". Were filename contains configuration parameters using the format noted in ./settings.js.
+//  Run script in directory where script is located using notation "node f5-existing-stack-failover-4nic-bigip.js filename". Where filename contains configuration parameters using the format noted in ./settings.js.
 
-var auth = require('../../../../lib/authentication');
-var content_library = require('../../../../lib/content_library');
-var datastore = require('../../../../lib/datastores');
-var net = require('../../../../lib/networks');
-var ovf = require('../../../../lib/ovf');
-var pool = require('../../../../lib/resource_pools');
+var auth = require('../../../../../../lib/authentication');
+var content_library = require('../../../../../../lib/content_library');
+var datastore = require('../../../../../../lib/datastores');
+var net = require('../../../../../../lib/networks');
+var ovf = require('../../../../../../lib/ovf');
+var pool = require('../../../../../../lib/resource_pools');
 var settings = require('./' + (process.argv[2]));
-var vm = require('../../../../lib/vms');
-var input = require('../../../../lib/input');
-var sndcmd = require ('../../../../lib/sendcmds');
-var sshfile = require ('../../../../lib/sendfile');
-var Logger = require('../../../../lib/logger');
+var vm = require('../../../../../../lib/vms');
+var input = require('../../../../../../lib/input');
+var sndcmd = require ('../../../../../../lib/sendcmds');
+var sshfile = require ('../../../../../../lib/sendfile');
+var Logger = require('../../../../../../lib/logger');
 var loggerOptions = {};
 var logger;
 loggerOptions.console = settings.logConsole;

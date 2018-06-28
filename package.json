@@ -1,7 +1,7 @@
 {
   "name": "f5-vmware-templates",
   "version": "1.2.0",
-  "description": "Common library code for deploying a BIG-IP in vmware vCenter environment",
+  "description": "Common library code for deploying BIG-IP(s) in VMware vCenter environments",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -16,5 +16,8 @@
     "ssh2shell": "^1.9.0",
     "unirest": "^0.5.1",
     "winston": "^2.4.1"
+  },
+  "scripts": {
+    "package": "bash ./package.sh"
   }
 }

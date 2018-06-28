@@ -1,5 +1,5 @@
-## Introduction
- 
+# Introduction
+
 Welcome to the GitHub repository for F5's VMware templates for deploying F5 instances in the VMware vCenter Manager. All of the templates in this repository have been developed by F5 Networks engineers. Across all branches in this repository, there are two directories: **supported** and **experimental**. Using Node.js, these templates use vCenters rest API to deploy and configure F5 BIG-IP virtual machines.
 
   - **supported**<br>
@@ -9,27 +9,28 @@ Welcome to the GitHub repository for F5's VMware templates for deploying F5 inst
   The *experimental* directory also contains VMware templates that have been created by F5 Networks. However, these templates have not completed full testing and are subject to change. F5 Networks does not offer technical support for templates in the experimental directory, so use these templates with caution.
 
 ## Template information
+
 Descriptions for each template, including how the templates are generated and assistance in deploying a template, are contained in the README file on the individual template pages.
 
+### Matrix for tagged releases
+
+F5 has created a matrix that contains all of the tagged releases of the F5 vCenter templates and the corresponding BIG-IP versions available for a specific tagged release. See https://github.com/F5Networks/f5-vmware-vcenter-templates/blob/v1.3.0/vmware-bigip-version-matrix.md
 
 ## Current F5 VMware templates
-The following is a list of the current F5 VMware templates. Click the link to view the README file which includes information on how to deploy the template.
-<br>
-   - [**Standalone BIG-IP VE -  nNIC: Experimental**](https://github.com/F5Networks/f5-vmware-vcenter-templates/tree/master/experimental/standalone/nNic/existing_stack)
-   - [**HA failover BIG-IP VE -  4NIC: Experimental**](https://github.com/F5Networks/f5-vmware-vcenter-templates/tree/master/experimental/failover/4nic/existing_stack)
 
-<br>
-<br>
+The following is a list of the current *supported* F5 VMware templates. Click the link to view the README file which includes information on how to deploy the template.
+
+- [**Standalone BIG-IP VE - nNIC**](https://github.com/F5Networks/f5-vmware-vcenter-templates/tree/master/supported/standalone/n-nic/existing-stack)
+
+- [**HA traditional failover BIG-IP VE - 4NIC**](https://github.com/F5Networks/f5-vmware-vcenter-templates/tree/master/supported/failover/same-net/traditional/4nic/existing-stack)
+
 ---
 
 ### Copyright
 
 Copyright 2014-2018 F5 Networks Inc.
 
-
 ## License
-
-
 
 ### Apache V2.0
 
@@ -44,7 +45,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and limitations
 under the License.
-
 
 ### Contributor License Agreement
 

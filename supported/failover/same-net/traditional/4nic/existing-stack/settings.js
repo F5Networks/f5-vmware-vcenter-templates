@@ -15,7 +15,7 @@ module.exports = {
   resourcePool: '<name of resource pool>', // Resource pool used for this vm - "Resources" is default
   vmName: '<name to use for new VE>', // a name of a VM and hostname of BIG-IP
   vmName2: '<name to use for new VE>', // a name of a VM and hostname of BIG-IP
-  ssl: false, // use strict ssl or not.. false allows you to accept all certs.
+  ssl: true, // use strict ssl or not.. false allows you to accept all certs.
               // NOTE: SSL should be set to true in a production environment.
   //Logging parameters
   logConsole: true, // log messages to console
@@ -29,7 +29,7 @@ module.exports = {
   dnsAddresses: '<DNS list>', // list of server IP addresses to use for DNS
   cloudlibUrl: 'https://raw.githubusercontent.com/F5Networks/f5-cloud-libs/v4.1.1/dist/f5-cloud-libs.tar.gz', // list url used to download cloud-libs node library.
                 // The default is listed as public github repository, specify alternate url if public internet from big-ip management network is not available.
-                // **Note cloud-lib version is specific to this template release and requires the cloud-lib release specified in default url be used (v3.6.0).
+                // **Note cloud-lib version is specific to this template release and requires the cloud-lib release specified in default url be used.
   
   // BIG-IP licensing using BIG-IQ
   bigIqAddress: '<BIG-IQ Management ip address>',   // optional - list BIG-IQ management address or FQDN to use for licensing BIG-IP's. ** Leave blank if using license keys!

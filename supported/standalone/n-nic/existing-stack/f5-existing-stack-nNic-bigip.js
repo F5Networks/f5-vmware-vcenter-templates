@@ -1,4 +1,4 @@
-//    Version v1.2.0
+//    Version v1.4.0
 //    Deploys single BIG-IP with 1-4 configured network interfaces.
 //    Example Required values located in ./settings.js
 //    Load script in directory were script is located using notation "node f5-existing-stack-nNic-big-ip.js filename". Were filename contains configuration parameters using the format noted in ./settings.js.
@@ -283,12 +283,12 @@ function standalone() {
         logger.info('Run configuration commands using cloud-libs for big-ip:' + settings.vmName);
         //Assemble Commands
         //Build network.js command
-        var set1nic = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/network.js --host localhost --user admin --password " + bigipAdminPwd + " <MGMTPORT> -o /var/log/cloud/vmware/network-config-1nic.log --log-level debug --wait-for ONBOARD_DONE --signal NETWORK_CONFIG_1NIC_DONE <ONENIC> &>> /var/log/cloud/vmware/cloudlibs-install.log < /dev/null &";
-        networkJs = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/network.js --host localhost --user admin --password " + bigipAdminPwd + " --port 443 -o /var/log/cloud/vmware/network-config.log --log-level debug --wait-for NETWORK_CONFIG_1NIC_DONE --signal NETWORK_CONFIG_DONE --vlan name:external,nic:1.1<EXTVLAN> --default-gw " + settings.extGw + "<INTVLAN><HAVLAN> --self-ip name:external-self,address:" + settings.extIpAddress + "/" + settings.extPrefix + ",vlan:external <INTSELF><HASELF> &>> /var/log/cloud/vmware/cloudlibs-install.log < /dev/null &"
+        var set1nic = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/network.js --host localhost --user admin --password " + bigipAdminPwd + " <MGMTPORT> -o /var/log/cloud/vmware/1nicSetup.log --log-level debug --wait-for ONBOARD_DONE --signal NETWORK_CONFIG_1NIC_DONE <ONENIC> &>> /var/log/cloud/vmware/install.log < /dev/null &";
+        networkJs = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/network.js --host localhost --user admin --password " + bigipAdminPwd + " --port 443 -o /var/log/cloud/vmware/network.log --log-level debug --wait-for NETWORK_CONFIG_1NIC_DONE --signal NETWORK_CONFIG_DONE --vlan name:external,nic:1.1<EXTVLAN> --default-gw " + settings.extGw + "<INTVLAN><HAVLAN> --self-ip name:external-self,address:" + settings.extIpAddress + "/" + settings.extPrefix + ",vlan:external <INTSELF><HASELF> &>> /var/log/cloud/vmware/install.log < /dev/null &"
         if (settings.numberNics == 1) {
             var set1nic = set1nic.replace(/<ONENIC>/g, "--single-nic");
             var set1nic = set1nic.replace(/<MGMTPORT>/g, "--port 8443");
-            var networkJs = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/network.js --host localhost --user admin --password " + bigipAdminPwd + " --port 8443 -o /var/log/cloud/vmware/network-config.log --log-level debug --wait-for NETWORK_CONFIG_1NIC_DONE --signal NETWORK_CONFIG_DONE --vlan name:external,nic:1.0 --default-gw " + settings.mgmtGwAddress + " --self-ip name:external-self,address:" + settings.mgmtIpAddress + "/" + settings.mgmtPrefix + ",vlan:external &>> /var/log/cloud/vmware/cloudlibs-install.log < /dev/null &";
+            var networkJs = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/network.js --host localhost --user admin --password " + bigipAdminPwd + " --port 8443 -o /var/log/cloud/vmware/network.log --log-level debug --wait-for NETWORK_CONFIG_1NIC_DONE --signal NETWORK_CONFIG_DONE --vlan name:external,nic:1.0 --default-gw " + settings.mgmtGwAddress + " --self-ip name:external-self,address:" + settings.mgmtIpAddress + "/" + settings.mgmtPrefix + ",vlan:external &>> /var/log/cloud/vmware/install.log < /dev/null &";
         } else {
             var set1nic = set1nic.replace(/<ONENIC>/g, "");
             var set1nic = set1nic.replace(/<MGMTPORT>/g, '')
@@ -321,7 +321,7 @@ function standalone() {
             var networkJs = networkJs.replace(/<HASELF>/g, '');
         }
         // Build onboard.js
-        onboardJs = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/onboard.js -o /var/log/cloud/vmware/onboard.log --log-level debug --host localhost --user admin --password " + bigipAdminPwd + "<MGMTPORT> --hostname " + settings.vmName + "." + settings.vmFqdn + " --ntp "+ settings.ntp + " --tz " + settings.timezone + " --dns " + settings.dnsAddresses + " --module ltm:nominal <LICENSE> &>> /var/log/cloud/vmware/cloudlibs-install.log < /dev/null &"
+        onboardJs = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/onboard.js -o /var/log/cloud/vmware/onboard.log --log-level debug --host localhost --user admin --password " + bigipAdminPwd + "<MGMTPORT> --hostname " + settings.vmName + "." + settings.vmFqdn + " --ntp "+ settings.ntp + " --tz " + settings.timezone + " --dns " + settings.dnsAddresses + " --module ltm:nominal <LICENSE> &>> /var/log/cloud/vmware/install.log < /dev/null &"
         if (settings.numberNics == 1){
             var onboardJs = onboardJs.replace(/<MGMTPORT>/g, " --ssl-port 8443")
         } else {
@@ -337,11 +337,11 @@ function standalone() {
         return sndcmd.runCommands([ "chmod +x /config/cloud/vmware/installCloudLibs.sh",
                                     "chmod +x /config/cloud/vmware/waitThenRun.sh",
                                     "chmod +x /config/cloud/vmware/custom-config.sh",
-                                    "nohup /config/cloud/vmware/installCloudLibs.sh &>> /var/log/cloud/vmware/cloudlibs-install.log < /dev/null &",
+                                    "nohup /config/cloud/vmware/installCloudLibs.sh &>> /var/log/cloud/vmware/install.log < /dev/null &",
                                     onboardJs,
                                     set1nic,
                                     networkJs,
-                                    "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/runScript.js --file /config/cloud/vmware/custom-config.sh --cwd /config/cloud/vmware -o /var/log/cloud/vmware/custom-config.log --log-level debug --wait-for NETWORK_CONFIG_DONE --signal CUSTOM_CONFIG_DONE &>> /var/log/cloud/vmware/cloudlibs-install.log < /dev/null &",
+                                    "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/runScript.js --file /config/cloud/vmware/custom-config.sh --cwd /config/cloud/vmware -o /var/log/cloud/vmware/custom-config.log --log-level debug --wait-for NETWORK_CONFIG_DONE --signal CUSTOM_CONFIG_DONE &>> /var/log/cloud/vmware/install.log < /dev/null &",
                                 ],
                                 settings.mgmtIpAddress,bigipRootPwd,settings.dnsAddresses).then(resp => {
                                     logger.info('Done');

@@ -1,4 +1,4 @@
- // Version v1.2.0
+ // Version v1.4.0
  // This file contains required configuration parameters used in f5 failover templates. Note most parameters are case sensitive.
 
 module.exports = {
@@ -27,7 +27,7 @@ module.exports = {
   ntp: '<ntp server url>', // URL to use for NTP
   timezone: '<UTC>', // specify time zone, ie US/Pacific
   dnsAddresses: '<DNS list>', // list of server IP addresses to use for DNS
-  cloudlibUrl: 'https://raw.githubusercontent.com/F5Networks/f5-cloud-libs/v4.1.1/dist/f5-cloud-libs.tar.gz', // list url used to download cloud-libs node library.
+  cloudlibUrl: 'https://raw.githubusercontent.com/F5Networks/f5-cloud-libs/v4.3.0/dist/f5-cloud-libs.tar.gz', // list url used to download cloud-libs node library.
                 // The default is listed as public github repository, specify alternate url if public internet from big-ip management network is not available.
                 // **Note cloud-lib version is specific to this template release and requires the cloud-lib release specified in default url be used.
   

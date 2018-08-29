@@ -1,4 +1,4 @@
-tar -C .. --exclude=".git*" --exclude="test" --exclude="dist" -cf dist/f5-vmware-vcenter-templates.tar f5-vmware-vcenter-templates
+tar -C .. --exclude=".git*" --exclude="test" --exclude="dist" --exclude build -cf dist/f5-vmware-vcenter-templates.tar f5-vmware-vcenter-templates
 
 gzip -nf dist/f5-vmware-vcenter-templates.tar
 

@@ -1,4 +1,4 @@
-//  Version v1.2.0
+//  Version v1.4.0
 //  Deploys HA pair (Active/Standby) of BIG-IP's each with 4 configured network interfaces: Management, External, Internal, and HA
 //  Example Required values located in ./settings.js
 //  Run script in directory where script is located using notation "node f5-existing-stack-failover-4nic-bigip.js filename". Where filename contains configuration parameters using the format noted in ./settings.js.
@@ -271,7 +271,7 @@ function cluster() {
         logger.info('Run configuration commands using cloud-libs for :' + settings.vmName);
         //Assemble Commands
         //Build network.js command
-        networkJs = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/network.js --host localhost --user admin --password " + bigipAdminPwd + " -o /var/log/cloud/vmware/network-config.log --log-level debug --wait-for ONBOARD_DONE --signal NETWORK_CONFIG_DONE --vlan name:external,nic:1.1<EXTVLAN> --default-gw " + settings.extGw + "<INTVLAN><HAVLAN> --self-ip name:external-self,address:" + settings.extIpAddress + "/" + settings.extPrefix + ",vlan:external <INTSELF><HASELF> &>> /var/log/cloud/vmware/cloudlibs-install.log < /dev/null &"
+        networkJs = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/network.js --host localhost --user admin --password " + bigipAdminPwd + " -o /var/log/cloud/vmware/network.log --log-level debug --wait-for ONBOARD_DONE --signal NETWORK_CONFIG_DONE --vlan name:external,nic:1.1<EXTVLAN> --default-gw " + settings.extGw + "<INTVLAN><HAVLAN> --self-ip name:external-self,address:" + settings.extIpAddress + "/" + settings.extPrefix + ",vlan:external <INTSELF><HASELF> &>> /var/log/cloud/vmware/install.log < /dev/null &"
         if (settings.extVlan) {
             var networkJs = networkJs.replace(/<EXTVLAN>/g, ",tag:" + settings.extVlan);
         } else {
@@ -293,7 +293,7 @@ function cluster() {
             var networkJs = networkJs.replace(/<HASELF>/g, " --self-ip name:ha-self,address:" + settings.haIpAddress + "/" + settings.haPrefix + ",vlan:ha");
         } 
         // Build onboard.js
-        onboardJs = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/onboard.js -o /var/log/cloud/vmware/onboard.log --log-level debug --host localhost --user admin --password " + bigipAdminPwd + " --hostname " + settings.vmName + "." + settings.vmFqdn + " --ntp "+ settings.ntp + " --tz " + settings.timezone + " --dns " + settings.dnsAddresses + " --module ltm:nominal <LICENSE> &>> /var/log/cloud/vmware/cloudlibs-install.log < /dev/null &"
+        onboardJs = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/onboard.js -o /var/log/cloud/vmware/onboard.log --log-level debug --host localhost --user admin --password " + bigipAdminPwd + " --hostname " + settings.vmName + "." + settings.vmFqdn + " --ntp "+ settings.ntp + " --tz " + settings.timezone + " --dns " + settings.dnsAddresses + " --module ltm:nominal <LICENSE> &>> /var/log/cloud/vmware/install.log < /dev/null &"
         if (settings.bigIqAddress && settings.bigIqLicenseSkuKeyword1 && settings.bigIqLicenseUnitOfMeasure){
             var onboardJs = onboardJs.replace(/<LICENSE>/g, " --license-pool --cloud vmware --big-iq-host " + settings.bigIqAddress + " --big-iq-user " + bigIqUsername + " --big-iq-password " + bigIqPassword + " --license-pool-name " + settings.bigIqLicensePoolName + " --sku-keyword-1 " + settings.bigIqLicenseSkuKeyword1 + " --unit-of-measure " + settings.bigIqLicenseUnitOfMeasure + " --big-ip-mgmt-address " + settings.mgmtIpAddress);
         } else if (settings.bigIqAddress){
@@ -302,13 +302,13 @@ function cluster() {
             var onboardJs = onboardJs.replace(/<LICENSE>/g, " --license " + settings.lickey1);
         }
         //Build cluster.js
-        clusterjs = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/cluster.js --wait-for CUSTOM_CONFIG_DONE --signal CLUSTER_DONE -o /var/log/cloud/vmware/cluster.log --log-level debug --host localhost --user admin --password " + bigipAdminPwd + " --config-sync-ip " + settings.haIpAddress + " --create-group --device-group ha_failover_group --sync-type sync-failover --network-failover --device " + settings.vmName + "." + settings.vmFqdn + " --auto-sync &>> /var/log/cloud/vmware/cloudlibs-install.log < /dev/null &";
+        clusterjs = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/cluster.js --wait-for CUSTOM_CONFIG_DONE --signal CLUSTER_DONE -o /var/log/cloud/vmware/cluster.log --log-level debug --host localhost --user admin --password " + bigipAdminPwd + " --config-sync-ip " + settings.haIpAddress + " --create-group --device-group ha_failover_group --sync-type sync-failover --network-failover --device " + settings.vmName + "." + settings.vmFqdn + " --auto-sync &>> /var/log/cloud/vmware/install.log < /dev/null &";
         return sndcmd.runCommands([ "chmod +x /config/cloud/vmware/installCloudLibs.sh",
                                     "chmod +x /config/cloud/vmware/waitThenRun.sh",
                                     "chmod +x /config/cloud/vmware/custom-config.sh",
-                                    "nohup /config/cloud/vmware/installCloudLibs.sh &>> /var/log/cloud/vmware/cloudlibs-install.log < /dev/null &",
+                                    "nohup /config/cloud/vmware/installCloudLibs.sh &>> /var/log/cloud/vmware/install.log < /dev/null &",
                                     networkJs,
-                                    "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/runScript.js --file /config/cloud/vmware/custom-config.sh --cwd /config/cloud/vmware -o /var/log/cloud/vmware/custom-config.log --log-level debug --wait-for NETWORK_CONFIG_DONE --signal CUSTOM_CONFIG_DONE &>> /var/log/cloud/vmware/cloudlibs-install.log < /dev/null &",
+                                    "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/runScript.js --file /config/cloud/vmware/custom-config.sh --cwd /config/cloud/vmware -o /var/log/cloud/vmware/custom-config.log --log-level debug --wait-for NETWORK_CONFIG_DONE --signal CUSTOM_CONFIG_DONE &>> /var/log/cloud/vmware/install.log < /dev/null &",
                                     onboardJs,
                                     clusterjs
                                 ],
@@ -365,7 +365,7 @@ function cluster() {
         logger.info('Run configuration commands using cloud-libs for big-ip:' + settings.vmName2);
         //Assemble Commands
         //Build network.js command
-        networkJs = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/network.js --host localhost --user admin --password " + bigipAdminPwd + " -o /var/log/cloud/vmware/network-config.log --log-level debug --wait-for ONBOARD_DONE --signal NETWORK_CONFIG_DONE --vlan name:external,nic:1.1<EXTVLAN> --default-gw " + settings.extGw + "<INTVLAN><HAVLAN> --self-ip name:external-self,address:" + settings.extIpAddress2 + "/" + settings.extPrefix + ",vlan:external <INTSELF><HASELF> &>> /var/log/cloud/vmware/cloudlibs-install.log < /dev/null &"
+        networkJs = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/network.js --host localhost --user admin --password " + bigipAdminPwd + " -o /var/log/cloud/vmware/network.log --log-level debug --wait-for ONBOARD_DONE --signal NETWORK_CONFIG_DONE --vlan name:external,nic:1.1<EXTVLAN> --default-gw " + settings.extGw + "<INTVLAN><HAVLAN> --self-ip name:external-self,address:" + settings.extIpAddress2 + "/" + settings.extPrefix + ",vlan:external <INTSELF><HASELF> &>> /var/log/cloud/vmware/install.log < /dev/null &"
         if (settings.extVlan) {
             var networkJs = networkJs.replace(/<EXTVLAN>/g, ",tag:" + settings.extVlan);
         } else {
@@ -387,7 +387,7 @@ function cluster() {
             var networkJs = networkJs.replace(/<HASELF>/g, " --self-ip name:ha-self,address:" + settings.haIpAddress2 + "/" + settings.haPrefix + ",vlan:ha");
         } 
         // Build onboard.js
-        onboardJs = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/onboard.js -o /var/log/cloud/vmware/onboard.log --log-level debug --host localhost --user admin --password " + bigipAdminPwd + " --hostname " + settings.vmName2 + "." + settings.vmFqdn + " --ntp "+ settings.ntp + " --tz " + settings.timezone + " --dns " + settings.dnsAddresses + " --module ltm:nominal <LICENSE> &>> /var/log/cloud/vmware/cloudlibs-install.log < /dev/null &"
+        onboardJs = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/onboard.js -o /var/log/cloud/vmware/onboard.log --log-level debug --host localhost --user admin --password " + bigipAdminPwd + " --hostname " + settings.vmName2 + "." + settings.vmFqdn + " --ntp "+ settings.ntp + " --tz " + settings.timezone + " --dns " + settings.dnsAddresses + " --module ltm:nominal <LICENSE> &>> /var/log/cloud/vmware/install.log < /dev/null &"
         if (settings.bigIqAddress && settings.bigIqLicenseSkuKeyword1 && settings.bigIqLicenseUnitOfMeasure){
             var onboardJs = onboardJs.replace(/<LICENSE>/g, " --license-pool --cloud vmware --big-iq-host " + settings.bigIqAddress + " --big-iq-user " + bigIqUsername + " --big-iq-password " + bigIqPassword + " --license-pool-name " + settings.bigIqLicensePoolName + " --sku-keyword-1 " + settings.bigIqLicenseSkuKeyword1 + " --unit-of-measure " + settings.bigIqLicenseUnitOfMeasure + " --big-ip-mgmt-address " + settings.mgmtIpAddress2);
         } else if (settings.bigIqAddress){
@@ -396,13 +396,13 @@ function cluster() {
             var onboardJs = onboardJs.replace(/<LICENSE>/g, " --license " + settings.lickey2);
         }
         // Build cluster.js
-        clusterjs = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/cluster.js --wait-for CUSTOM_CONFIG_DONE --signal CLUSTER_DONE -o /var/log/cloud/vmware/cluster.log --log-level debug --host localhost --user admin --password " + bigipAdminPwd + " --config-sync-ip " + settings.haIpAddress2 + " --join-group --remote-user admin --remote-password " + bigipAdminPwd + " --device-group ha_failover_group --remote-host " + settings.mgmtIpAddress + " --sync &>> /var/log/cloud/vmware/cloudlibs-install.log < /dev/null &";
+        clusterjs = "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/cluster.js --wait-for CUSTOM_CONFIG_DONE --signal CLUSTER_DONE -o /var/log/cloud/vmware/cluster.log --log-level debug --host localhost --user admin --password " + bigipAdminPwd + " --config-sync-ip " + settings.haIpAddress2 + " --join-group --remote-user admin --remote-password " + bigipAdminPwd + " --device-group ha_failover_group --remote-host " + settings.mgmtIpAddress + " --sync &>> /var/log/cloud/vmware/install.log < /dev/null &";
         return sndcmd.runCommands([ "chmod +x /config/cloud/vmware/installCloudLibs.sh",
                                     "chmod +x /config/cloud/vmware/waitThenRun.sh",
                                     "chmod +x /config/cloud/vmware/custom-config.sh",
-                                    "nohup /config/cloud/vmware/installCloudLibs.sh &>> /var/log/cloud/vmware/cloudlibs-install.log < /dev/null &",
+                                    "nohup /config/cloud/vmware/installCloudLibs.sh &>> /var/log/cloud/vmware/install.log < /dev/null &",
                                     networkJs,
-                                    "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/runScript.js --file /config/cloud/vmware/custom-config.sh --cwd /config/cloud/vmware -o /var/log/cloud/vmware/custom-config.log --log-level debug --wait-for NETWORK_CONFIG_DONE --signal CUSTOM_CONFIG_DONE &>> /var/log/cloud/vmware/cloudlibs-install.log < /dev/null &",
+                                    "nohup /config/cloud/vmware/waitThenRun.sh f5-rest-node /config/cloud/vmware/node_modules/f5-cloud-libs/scripts/runScript.js --file /config/cloud/vmware/custom-config.sh --cwd /config/cloud/vmware -o /var/log/cloud/vmware/custom-config.log --log-level debug --wait-for NETWORK_CONFIG_DONE --signal CUSTOM_CONFIG_DONE &>> /var/log/cloud/vmware/install.log < /dev/null &",
                                     onboardJs,
                                     clusterjs
                                 ],
